@@ -1,0 +1,58 @@
+-- Wojciech Chmiel - thrift parser grammar
+
+-- dopisz program w pythonie, ktory przygotowuje plik - usuwa service i exception z komentarzami do nich
+
+--Program.  Prog        ::= [Namespace] [Class];
+Program.  Prog        ::= [Class];
+
+--[].       [Namespace]   ::= ;
+--(:).      [Namespace]   ::= Namespace [Namespace] ;
+
+--ConcrNamesp. Namespace     ::= "namespace" Language [Dir];
+--Java.     Language      ::= "java";
+--Python.   Language      ::= "py";
+--Cpp.      Language      ::= "cpp";
+--
+--[].       [Dir]         ::= ;
+--(:).      [Dir]         ::= Dir "." [Dir];
+--ConcrDir. Dir           ::= Ident;
+
+[].       [Class]       ::= ;
+(:).      [Class]       ::= Class [Class];
+
+Struct.   Class         ::= "struct" Ident "{" [Field] "}";
+Enum.     Class         ::= "enum" Ident "{" [Enumeration] "}";
+--Service.  Class         ::= "service" Ident Dummy "}";
+--Exception.Class         ::= "exception" Ident Dummy "}";
+
+[].       [Field]       ::= ;
+(:).      [Field]       ::= Field ";" [Field] ;
+
+[].       [Enumeration] ::= ;
+(:).      [Enumeration] ::= Enumeration "," [Enumeration] ;
+
+FDecl.          Field   ::= Integer ":" Requirement Type Ident Default; 
+
+TStr.     Type          ::= "string";
+TInt.     Type          ::= "i32";
+TShort.   Type          ::= "i16";
+TLong.    Type          ::= "i64";
+TIdent.   Type          ::= Ident;
+TMap.     Type          ::= "map" "<" Type "," Type ">";
+TList.    Type          ::= "list" "<" Type ">";
+TSet.     Type          ::= "set" "<" Type ">";
+
+REmp.     Requirement          ::= ;
+RReq.     Requirement          ::= "required";
+ROpt.     Requirement          ::= "optional";
+
+DefEmp.   Default       ::= ;
+DefInt.   Default       ::= "=" Integer;
+DefEmptyStr.   Default  ::= "=" "\"\"";
+DefStr.   Default  ::= "=" "\"" Ident "\"";
+
+Comma.    Delim         ::= ",";
+SemiC.    Delim         ::= ";";
+Empty.    Delim         ::= ;
+
+OneEnum.  Enumeration   ::= Ident "=" Integer;
